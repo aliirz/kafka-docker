@@ -1,5 +1,7 @@
-FROM openjdk:8u212-jre-alpine
+FROM registry.redhat.io/rhel7/rhel
 
+ARG RHEL_USERNAME
+ARG RHEL_PASSWORD
 ARG kafka_version=2.3.0
 ARG scala_version=2.12
 ARG glibc_version=2.29-r0
@@ -9,7 +11,7 @@ ARG build_date=unspecified
 LABEL org.label-schema.name="kafka" \
       org.label-schema.description="Apache Kafka" \
       org.label-schema.build-date="${build_date}" \
-      org.label-schema.vcs-url="https://github.com/wurstmeister/kafka-docker" \
+      org.label-schema.vcs-url="https://github.com/aliirz/kafka-docker" \
       org.label-schema.vcs-ref="${vcs_ref}" \
       org.label-schema.version="${scala_version}_${kafka_version}" \
       org.label-schema.schema-version="1.0" \
@@ -21,6 +23,12 @@ ENV KAFKA_VERSION=$kafka_version \
     GLIBC_VERSION=$glibc_version
 
 ENV PATH=${PATH}:${KAFKA_HOME}/bin
+
+RUN subscription-manager register --username $RHEL_USERNAME --password $RHEL_PASSWORD --auto-attach
+RUN subscription-manager repos --enable=rhel-7-server-rpms --enable rhel-7-server-optional-rpms
+
+
+RUN yum update -y && yum install -y java-1.8.0-openjdk bash curl jq docker
 
 COPY download-kafka.sh start-kafka.sh broker-list.sh create-topics.sh versions.sh /tmp/
 
