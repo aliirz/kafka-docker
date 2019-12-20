@@ -30,7 +30,7 @@ RUN subscription-manager repos --enable=rhel-7-server-rpms --enable rhel-7-serve
 
 
 
-RUN yum update -y && yum install -y java-1.8.0-openjdk bash curl docker wget
+RUN yum update -y && yum install -y java-1.8.0-openjdk bash curl docker wget hostname
 
 COPY download-kafka.sh start-kafka.sh broker-list.sh create-topics.sh versions.sh /tmp/
 
