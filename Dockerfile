@@ -38,7 +38,7 @@ RUN wget -O jq https://github.com/stedolan/jq/releases/download/jq-1.6/jq-linux6
   && chmod +x ./jq \
   && cp jq /usr/bin
 
-RUN yum install -y bash curl docker \
+RUN yum install -y bash curl docker wget hostname \
  && chmod a+x /tmp/*.sh \
  && mv /tmp/start-kafka.sh /tmp/broker-list.sh /tmp/create-topics.sh /tmp/versions.sh /usr/bin \
  && sync && /tmp/download-kafka.sh \
