@@ -28,11 +28,15 @@ RUN subscription-manager register --username $RHEL_USERNAME --password $RHEL_PAS
 RUN subscription-manager repos --enable=rhel-7-server-rpms --enable rhel-7-server-optional-rpms
 
 
-RUN yum update -y && yum install -y java-1.8.0-openjdk bash curl jq docker
+RUN wget -O jq https://github.com/stedolan/jq/releases/download/jq-1.6/jq-linux64 \
+  && chmod +x ./jq \
+  && cp jq /usr/bin
+
+RUN yum update -y && yum install -y java-1.8.0-openjdk bash curl docker
 
 COPY download-kafka.sh start-kafka.sh broker-list.sh create-topics.sh versions.sh /tmp/
 
-RUN yum install -y bash curl jq docker \
+RUN yum install -y bash curl docker \
  && chmod a+x /tmp/*.sh \
  && mv /tmp/start-kafka.sh /tmp/broker-list.sh /tmp/create-topics.sh /tmp/versions.sh /usr/bin \
  && sync && /tmp/download-kafka.sh \
